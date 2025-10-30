@@ -183,6 +183,37 @@ app.post("/agents", validateAgent, async (req, res) => {
   }
 });
 
+// b. Fetch all Sales Agent
+const fetchSalesAgents = async () => {
+  try {
+    const agents = await AnvayaSalesAgent.find();
+    return agents;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+app.get("/agents", async (req, res) => {
+  try {
+    const agents = await fetchSalesAgents();
+    if (agents.length > 0) {
+      res.status(200).json({
+        message: "✅ Successfully fetched all Sales Agents.",
+        agents: agents,
+      });
+    } else {
+      res
+        .status(404)
+        .json({ message: "❌ Agents not found.", error: error.message });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: "❌ Failed to fetch Sales Agents:",
+      error: error.message,
+    });
+  }
+});
+
 // Export app for serverless platforms like Vercel - to start the server
 module.exports = app;
 
